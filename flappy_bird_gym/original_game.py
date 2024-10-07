@@ -12,7 +12,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-ASSETS_DIR = "./flappy_bird_gym/assets"
+ASSETS_DIR = "./assets"
 
 FPS = 30
 SCREEN_WIDTH = 288
@@ -65,7 +65,7 @@ def main():
     SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption('Flappy Bird')
 
-    # numbers sprites for score display
+    # Load numbers sprites for score display
     IMAGES['numbers'] = (
         pygame.image.load(ASSETS_DIR + '/sprites/0.png').convert_alpha(),
         pygame.image.load(ASSETS_DIR + '/sprites/1.png').convert_alpha(),
@@ -79,19 +79,13 @@ def main():
         pygame.image.load(ASSETS_DIR + '/sprites/9.png').convert_alpha()
     )
 
-    # game over sprite
+    # Load other static images
     IMAGES['gameover'] = pygame.image.load(ASSETS_DIR + '/sprites/gameover.png').convert_alpha()
-    # message sprite for welcome screen
     IMAGES['message'] = pygame.image.load(ASSETS_DIR + '/sprites/message.png').convert_alpha()
-    # base (ground) sprite
     IMAGES['base'] = pygame.image.load(ASSETS_DIR + '/sprites/base.png').convert_alpha()
 
-    # sounds
-    if 'win' in sys.platform:
-        soundExt = '.wav'
-    else:
-        soundExt = '.ogg'
-
+    # Load sounds
+    soundExt = '.wav' if 'win' in sys.platform else '.ogg'
     SOUNDS['die'] = pygame.mixer.Sound(ASSETS_DIR + '/audio/die' + soundExt)
     SOUNDS['hit'] = pygame.mixer.Sound(ASSETS_DIR + '/audio/hit' + soundExt)
     SOUNDS['point'] = pygame.mixer.Sound(ASSETS_DIR + '/audio/point' + soundExt)
@@ -99,11 +93,11 @@ def main():
     SOUNDS['wing'] = pygame.mixer.Sound(ASSETS_DIR + '/audio/wing' + soundExt)
 
     while True:
-        # select random background sprites
+        # Select random background sprites
         randBg = random.randint(0, len(BACKGROUNDS_LIST) - 1)
         IMAGES['background'] = pygame.image.load(BACKGROUNDS_LIST[randBg]).convert()
 
-        # select random player sprites
+        # Select random player sprites (load them once)
         randPlayer = random.randint(0, len(PLAYERS_LIST) - 1)
         IMAGES['player'] = (
             pygame.image.load(PLAYERS_LIST[randPlayer][0]).convert_alpha(),
@@ -111,7 +105,7 @@ def main():
             pygame.image.load(PLAYERS_LIST[randPlayer][2]).convert_alpha(),
         )
 
-        # select random pipe sprites
+        # Select random pipe sprites
         pipe_index = random.randint(0, len(PIPES_LIST) - 1)
         IMAGES['pipe'] = (
             pygame.transform.flip(
@@ -119,13 +113,13 @@ def main():
             pygame.image.load(PIPES_LIST[pipe_index]).convert_alpha(),
         )
 
-        # hismask for pipes
+        # Hitmask for pipes
         HITMASKS['pipe'] = (
             get_hitmask(IMAGES['pipe'][0]),
             get_hitmask(IMAGES['pipe'][1]),
         )
 
-        # hitmask for player
+        # Hitmask for player
         HITMASKS['player'] = (
             get_hitmask(IMAGES['player'][0]),
             get_hitmask(IMAGES['player'][1]),
@@ -135,7 +129,6 @@ def main():
         movement_info = show_welcome_animation()
         crash_info = main_game(movement_info)
         show_game_over_screen(crash_info)
-
 
 def show_welcome_animation():
     """ Shows welcome screen animation of flappy bird. """
